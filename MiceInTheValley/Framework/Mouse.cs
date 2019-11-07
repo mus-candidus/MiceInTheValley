@@ -114,7 +114,7 @@ namespace MiceInTheValley {
             // Scaling factor of mouse and shadow texture.
             const float scale = 3f;
             var mouseOrigin  = Game1.GlobalToLocal(Game1.viewport, position + new Vector2(0f, -20f));
-            var shadowOrigin = Game1.GlobalToLocal(Game1.viewport, position + new Vector2(scale * 8f, scale * 10f));
+            var shadowOrigin = Game1.GlobalToLocal(Game1.viewport, position + new Vector2(scale * 8f, scale * 6f));
 
             // Our custom mouse sprite provides flipped textures so flip must be false.
             sprite.draw(b, mouseOrigin, (position.Y + 64f) / 10000f, 0, 0, Color.White, false, scale);
