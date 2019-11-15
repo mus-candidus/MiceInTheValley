@@ -13,15 +13,11 @@ using StardewValley.TerrainFeatures;
 
 namespace MiceInTheValley {
     public class ModEntry : Mod, IAssetLoader {
-        // Track the mice added to the list of critters.
-        private Dictionary<string, List<Critter>> mice_ = new Dictionary<string, List<Critter>>();
-
         // Squeak.
         private SoundEffect sound_;
 
         public override void Entry(IModHelper helper) {
-            helper.Events.GameLoop.DayStarted += OnDayStarted;
-            helper.Events.GameLoop.DayEnding  += OnDayEnding;
+            helper.Events.Player.Warped += OnWarped;
 
             // Load the sound.
             string soundFilePath = Path.Combine(helper.DirectoryPath, "assets/mouse.wav");
@@ -52,56 +48,11 @@ namespace MiceInTheValley {
             }
         }
 
-        // Mice are added once a day.
-        private void OnDayStarted(object sender, DayStartedEventArgs e) {
-            Monitor.Log("OnDayStarted()");
-
-            foreach (var location in Game1.locations) {
-                // Prepare tracking list.
-                if (!mice_.ContainsKey(location.Name)) {
-                    mice_.Add(location.Name, new List<Critter>());
-                }
-
-                #if false
-                // Just for debugging.
-                var crittersField = this.Helper.Reflection.GetField<List<Critter>>(location, "critters");
-                List<Critter> critters = crittersField.GetValue();
-                if (critters != null) {
-                    Monitor.Log($"Number of critters in {location.Name}: {critters.Count}");
-                    foreach (var critter in critters) {
-                        Monitor.Log($"Critter in {location.Name}: {critter.GetType()}");
-                    }
-                }
-                else {
-                    Monitor.Log($"List of critters in {location.Name} is null");
-                }
-                #endif
-
-                // Add at most 10 mice per location.
-                for (int i = 0; i < 10; ++i) {
-                    addMice(location, 0.5);
-                }
-            }
-        }
-
-        // Remove remaining mice at the end of day so the town doesn't get infested over time.
-        private void OnDayEnding(object sender, DayEndingEventArgs e) {
-            Monitor.Log("OnDayEnding()");
-
-            foreach (var location in Game1.locations) {
-                var crittersField = this.Helper.Reflection.GetField<List<Critter>>(location, "critters");
-                List<Critter> critters = crittersField.GetValue();
-                if (critters != null) {
-                    // Remove the remaining mice.
-                    foreach (var mouse in mice_[location.Name]) {
-                        bool success = critters.Remove(mouse);
-                        if (success) {
-                            Monitor.Log($"Removed mouse from {location.Name}");
-                        }
-                    }
-                }
-                // Clear tracking list.
-                mice_[location.Name].Clear();
+        // Mice are added when warping to a new location.
+        private void OnWarped(object sender, WarpedEventArgs e) {
+            // Add at most 10 mice per location.
+            for (int i = 0; i < 10; ++i) {
+                addMice(e.NewLocation, 0.5);
             }
         }
 
@@ -147,8 +98,6 @@ namespace MiceInTheValley {
             var mouse = new Mouse(this.Monitor, position, direction, speed, sound_);
             // Add to critters (no reflection necessary to access the list)
             location.addCritter(mouse);
-            // Add to tracking list.
-            mice_[location.Name].Add(mouse);
 
             Monitor.Log($"Added mouse in {location.Name} at {position}");
         }
