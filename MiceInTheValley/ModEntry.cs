@@ -78,7 +78,7 @@ namespace MiceInTheValley {
                     int num2 = Game1.random.Next(5, 12);
                     bool doIt = true;
                     for (int i = 0; i < num2; i++) {
-                        position += direction;
+                        position -= direction;
                         Rectangle rectangle = new Rectangle((int) position.X * 64, (int) position.Y * 64, 64, 64);
                         bool placeable = location.isTileLocationTotallyClearAndPlaceable(position);
                         if (!location.largeTerrainFeatures[index].getBoundingBox().Intersects(rectangle) && !placeable) {
