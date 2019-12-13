@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -6,17 +5,20 @@ using Microsoft.Xna.Framework.Audio;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.BellsAndWhistles;
 using StardewValley.Locations;
 using StardewValley.TerrainFeatures;
+
+using MiceInTheValley.Framework;
 
 
 namespace MiceInTheValley {
     public class ModEntry : Mod, IAssetLoader {
         // Squeak.
         private SoundEffect sound_;
+        private ModConfig config_;
 
         public override void Entry(IModHelper helper) {
+            config_ = helper.ReadConfig<ModConfig>();
             helper.Events.Player.Warped += OnWarped;
 
             // Load the sound.
@@ -95,7 +97,7 @@ namespace MiceInTheValley {
             }
 
             int speed = Game1.random.Next(10);
-            var mouse = new Mouse(this.Monitor, position, direction, speed, sound_);
+            var mouse = new Mouse(this.Monitor, position, direction, speed, sound_, config_);
             // Add to critters (no reflection necessary to access the list)
             location.addCritter(mouse);
 

@@ -10,20 +10,22 @@ using StardewValley.BellsAndWhistles;
 using StardewValley.TerrainFeatures;
 
 
-namespace MiceInTheValley {
+namespace MiceInTheValley.Framework {
     // A heavily modified rabbit :-)
-    public class Mouse : Critter {
+    internal class Mouse : Critter {
         private int characterCheckTimer_ = 200;
         private bool running_;
 
         private readonly Vector2 direction_;
         private readonly IMonitor monitor_;
-        private readonly SoundEffect sound_;
+        private readonly SoundEffectInstance sound_;
 
-        public Mouse(IMonitor monitor, Vector2 position, Vector2 direction, float speed, SoundEffect sound) {
-            monitor_ = monitor;
-            sound_ = sound;
-            direction_ = direction;
+        public Mouse(IMonitor monitor, Vector2 position, Vector2 direction, float speed, SoundEffect sound, ModConfig config) {
+            monitor_      = monitor;
+            sound_        = sound.CreateInstance();
+            sound_.Volume = config.Volume;
+            sound_.Pitch  = config.Pitch;
+            direction_    = direction;
 
             base.position = position * 64f;
             position.Y += 48f;
