@@ -31,7 +31,7 @@ namespace MiceInTheValley {
         }
 
         public bool CanLoad<T>(IAssetInfo asset) {
-            bool retval = asset.AssetNameEquals("mouse");
+            bool retval = asset.AssetNameEquals("mouse") || asset.AssetNameEquals("mouse_white");
             if (retval) {
                 this.Monitor.Log($"Can load asset {asset.AssetName}");
             }
@@ -40,10 +40,10 @@ namespace MiceInTheValley {
         }
 
         public T Load<T>(IAssetInfo asset) {
-            if (asset.AssetNameEquals("mouse")) {
+            if (asset.AssetNameEquals("mouse") || asset.AssetNameEquals("mouse_white")) {
                 this.Monitor.Log($"Load asset {asset.AssetName}");
 
-                return this.Helper.Content.Load<T>("assets/mouse.png");
+                return this.Helper.Content.Load<T>($"assets/{asset.AssetName}.png");
             }
             else {
                 return default(T);
@@ -97,7 +97,9 @@ namespace MiceInTheValley {
             }
 
             int speed = Game1.random.Next(10);
-            var mouse = new Mouse(this.Monitor, position, direction, speed, sound_, config_);
+            // White mice are rare.
+            bool mouseIsWhite = (Game1.random.NextDouble() < 0.05);
+            var mouse = new Mouse(this.Monitor, position, direction, speed, mouseIsWhite, sound_, config_);
             // Add to critters (no reflection necessary to access the list)
             location.addCritter(mouse);
 

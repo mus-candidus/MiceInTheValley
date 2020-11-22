@@ -20,7 +20,7 @@ namespace MiceInTheValley.Framework {
         private readonly IMonitor monitor_;
         private readonly SoundEffectInstance sound_;
 
-        public Mouse(IMonitor monitor, Vector2 position, Vector2 direction, float speed, SoundEffect sound, ModConfig config) {
+        public Mouse(IMonitor monitor, Vector2 position, Vector2 direction, float speed, bool mouseIsWhite, SoundEffect sound, ModConfig config) {
             monitor_      = monitor;
             sound_        = sound.CreateInstance();
             sound_.Volume = config.Volume;
@@ -30,7 +30,7 @@ namespace MiceInTheValley.Framework {
             base.position = position * 64f;
             position.Y += 48f;
             baseFrame = 0;
-            sprite = new AnimatedSprite("mouse", baseFrame, 16, 16);
+            sprite = new AnimatedSprite(mouseIsWhite ? "mouse_white" : "mouse", baseFrame, 16, 16);
             sprite.loop = true;
             startingPosition = position;
         }
