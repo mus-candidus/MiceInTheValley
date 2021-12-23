@@ -13,6 +13,9 @@ using StardewValley.TerrainFeatures;
 namespace MiceInTheValley.Framework {
     // A heavily modified rabbit :-)
     internal class Mouse : Critter {
+        // Enum doesn't adhere to naming conventions because it matches sprite names.
+        internal enum Species { mouse, mouse_white, mouse_tiger };
+
         private int characterCheckTimer_ = 200;
         private bool running_;
 
@@ -20,7 +23,7 @@ namespace MiceInTheValley.Framework {
         private readonly IMonitor monitor_;
         private readonly SoundEffectInstance sound_;
 
-        public Mouse(IMonitor monitor, Vector2 position, Vector2 direction, float speed, bool mouseIsWhite, SoundEffect sound, ModConfig config) {
+        public Mouse(IMonitor monitor, Vector2 position, Vector2 direction, float speed, Species species, SoundEffect sound, ModConfig config) {
             monitor_      = monitor;
             sound_        = sound.CreateInstance();
             sound_.Volume = config.Volume;
@@ -30,7 +33,7 @@ namespace MiceInTheValley.Framework {
             base.position = position * 64f;
             position.Y += 48f;
             baseFrame = 0;
-            sprite = new AnimatedSprite(mouseIsWhite ? "mouse_white" : "mouse", baseFrame, 16, 16);
+            sprite = new AnimatedSprite(species.ToString(), baseFrame, 16, 16);
             sprite.loop = true;
             startingPosition = position;
         }

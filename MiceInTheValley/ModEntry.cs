@@ -31,7 +31,9 @@ namespace MiceInTheValley {
         }
 
         public bool CanLoad<T>(IAssetInfo asset) {
-            bool retval = asset.AssetNameEquals("mouse") || asset.AssetNameEquals("mouse_white");
+            bool retval = asset.AssetNameEquals("mouse")
+                       || asset.AssetNameEquals("mouse_white")
+                       || asset.AssetNameEquals("mouse_tiger");
             if (retval) {
                 this.Monitor.Log($"Can load asset {asset.AssetName}");
             }
@@ -40,7 +42,9 @@ namespace MiceInTheValley {
         }
 
         public T Load<T>(IAssetInfo asset) {
-            if (asset.AssetNameEquals("mouse") || asset.AssetNameEquals("mouse_white")) {
+            if (asset.AssetNameEquals("mouse")
+             || asset.AssetNameEquals("mouse_white")
+             || asset.AssetNameEquals("mouse_tiger")) {
                 this.Monitor.Log($"Load asset {asset.AssetName}");
 
                 return this.Helper.Content.Load<T>($"assets/{asset.AssetName}.png");
@@ -97,9 +101,16 @@ namespace MiceInTheValley {
             }
 
             int speed = Game1.random.Next(10);
+            Mouse.Species species = Mouse.Species.mouse;
             // White mice are rare.
-            bool mouseIsWhite = (Game1.random.NextDouble() < 0.05);
-            var mouse = new Mouse(this.Monitor, position, direction, speed, mouseIsWhite, sound_, config_);
+            if (Game1.random.NextDouble() < 0.05) {
+                species = Mouse.Species.mouse_white;
+            }
+            // Tiger mice live only on Ginger Island and are rare, too.
+            else if (Game1.random.NextDouble() < 0.2 && location.Name.StartsWith("Island")) {
+                species = Mouse.Species.mouse_tiger;
+            }
+            var mouse = new Mouse(this.Monitor, position, direction, speed, species, sound_, config_);
             // Add to critters (no reflection necessary to access the list)
             location.addCritter(mouse);
 
