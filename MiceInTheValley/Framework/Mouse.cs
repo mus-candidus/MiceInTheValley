@@ -105,7 +105,7 @@ namespace MiceInTheValley.Framework {
                         Rectangle value = new Rectangle((int) position.X + 32, (int) position.Y - 32, 4, 192);
                         foreach (LargeTerrainFeature largeTerrainFeature in environment.largeTerrainFeatures) {
                             if (largeTerrainFeature is Bush && largeTerrainFeature.getBoundingBox().Intersects(value)) {
-                                (largeTerrainFeature as Bush).performUseAction(largeTerrainFeature.tilePosition, environment);
+                                (largeTerrainFeature as Bush).performUseAction(largeTerrainFeature.tilePosition.Get(), environment);
                                 return true;
                             }
                         }
